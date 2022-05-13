@@ -20,9 +20,16 @@ dirR_val   =  dir(strcat(dataDir,filesep,'EM30-R*',filesep,'*val*',filesep,'*.ti
 
 %%
 clear EMImages;
-EMImages(4096,4096,numel(dirH_val)) = 0;
-
+EMImages(4096,4096,numel(dirH_val)) = uint16(0);
+%%
 for k=1:numel(dirH_val)
-    EMImages(:,:,k) = imread(strcat(dataDir,filesep,dir0(1).name,filesep,dir01(1).name,filesep,dir011(k).name));
+    EMImages(:,:,k) = uint16( imread(strcat(dataDir,filesep,dir0(1).name,filesep,dir01(1).name,filesep,dir011(k).name)));
     disp(k)
 end
+
+
+%%
+q=unique(EMImages);
+%%
+
+surfdat(EMImages(1:2:end,1:2:end,1:2:end)==q(end-19))
