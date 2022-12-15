@@ -33,3 +33,15 @@ q=unique(EMImages);
 %%
 
 surfdat(EMImages(1:2:end,1:2:end,1:2:end)==q(end-19))
+
+%%
+surfdat(EMImages(1:2:end,1:2:end,1:2:end)==q(7))
+
+%%
+
+for k=1:numel(q)
+    disp(k)
+    v(k)=sum(sum(sum(EMImages(1:8:end,1:8:end,1:2:end)==q(k))));
+end
+
+plot(v)
