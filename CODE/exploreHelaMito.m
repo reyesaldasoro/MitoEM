@@ -39,9 +39,9 @@ for k=1:numFiles
     disp(k)
     Hela(:,:,k) = imread(strcat(dirData,dir0(cellSelected).name,filesep,dir3(k).name));
 end
-
+cellRegion                  = (Hela_cell==1).*(Hela_nuclei==0);
 %% Display
-displaySlice=50;
+displaySlice=30;
 figure(1)
 imagesc(Hela_nuclei(:,:,displaySlice)+2*Hela_background(:,:,displaySlice))
 figure(2)
@@ -57,12 +57,52 @@ intensity_nuclei            = mean(Hela(Hela_nuclei==1));
 intensity_background        = mean(Hela(Hela_background==1));
 intensity_min_Hela          = min(Hela(:));
 intensity_max_Hela          = max(Hela(:));
+   
 
+intensitiesCellSorted       = sort(Hela(cellRegion==1));
+intensity_min1_Cell          = intensitiesCellSorted(round(0.05*numel(intensitiesCellSorted)));
+intensity_min2_Cell          = intensitiesCellSorted(round(0.01*numel(intensitiesCellSorted)));
+
+
+%% Very dark solid regions
+
+displaySlice=30;
+currentSlice                = Hela(:,:,displaySlice);
+currentRegion               = imerode(cellRegion(:,:,displaySlice),ones(9));
+
+
+darkSolidRegions1           = currentRegion.*bwlabel(bwmorph(currentSlice<(intensity_min2_Cell),'majority'));
+darkSolidRegions1_P         = regionprops(darkSolidRegions1,'area');
+darkSolidRegions2           = ismember(darkSolidRegions1,find([darkSolidRegions1_P.Area]>100));
+darkSolidRegions3           = imclose(imfill(darkSolidRegions2,'holes'),ones(5));
 
 %%
-currentSlice                =Hela(:,:,displaySlice);
+
+intermediateRegions             = (currentSlice<(0.6*intensity_min1_Cell+0.4*intensity_nuclei)).*currentRegion.*(1-imdilate(darkSolidRegions3,ones(5)));
+intermediateRegions_L           = bwlabel(intermediateRegions);
+intermediateRegions_P           = regionprops(intermediateRegions_L,'Area'); 
+
+intermediateRegions2            = bwlabel(ismember(intermediateRegions_L,find([intermediateRegions_P.Area]>200)));
+intermediateRegions2_L          = bwlabel(imclose(intermediateRegions2,ones(3)));
+intermediateRegions2_P          = regionprops(intermediateRegions2_L,'Area','FilledArea','FilledImage'); 
+
+[intermediateRegions3_L,numR]   = bwlabel(ismember(intermediateRegions2_L,find(([intermediateRegions2_P.Area]./[intermediateRegions2_P.FilledArea])<=0.9)));
+%%
+intermediateRegions4            = zeros(size(intermediateRegions));
+
+closeReg                        = strel('disk',21);
+for counterR = 1:numR
+    intermediateRegions4        = intermediateRegions4+ counterR*(imclose(intermediateRegions3_L==counterR,closeReg));
+end
 figure(4)
-imagesc(currentSlice.*(currentSlice<(intensity_nuclei-75)).* Hela_cell(:,:,displaySlice).*(1-Hela_nuclei(:,:,displaySlice)))
+imagesc(intermediateRegions4)
+figure(1)
+imagesc(currentSlice.*(intermediateRegions4==0))
+
+%imagesc(currentSlice.*(intermediateRegions))
+%imagesc(currentSlice.*(1-(edge(currentSlice.*currentRegion,'canny',[],3.5))))
+%xis([400 900 600 1200])
+%%
 caxis([intensity_min_Hela intensity_max_Hela])
 
 colormap gray
