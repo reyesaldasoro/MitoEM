@@ -55,10 +55,16 @@ colormap gray
 % the nucleus, take that as  background value
 intensity_nuclei            = mean(Hela(Hela_nuclei==1));
 intensity_background        = mean(Hela(Hela_background==1));
+intensity_min_Hela          = min(Hela(:));
+intensity_max_Hela          = max(Hela(:));
+
+
 %%
 currentSlice                =Hela(:,:,displaySlice);
 figure(4)
-imagesc(currentSlice.*(currentSlice<(intensity_nuclei-30)).* Hela_cell(:,:,displaySlice).*(1-Hela_nuclei(:,:,displaySlice)))
+imagesc(currentSlice.*(currentSlice<(intensity_nuclei-75)).* Hela_cell(:,:,displaySlice).*(1-Hela_nuclei(:,:,displaySlice)))
+caxis([intensity_min_Hela intensity_max_Hela])
+
 colormap gray
 %%
 %dir0                = 'D:\Acad\GitHub\HeLa-Cell-Segmentation\Code';
