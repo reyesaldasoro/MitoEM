@@ -45,3 +45,6 @@ for k=1:numel(q)
 end
 
 plot(v)
+
+%%
+imagesc(EMImages(:,:,1))
