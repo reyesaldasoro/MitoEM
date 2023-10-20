@@ -40,6 +40,16 @@ for k=1:numFiles
     Hela(:,:,k) = imread(strcat(dirData,dir0(cellSelected).name,filesep,dir3(k).name));
 end
 cellRegion                  = (Hela_cell==1).*(Hela_nuclei==0);
+%% Segment Mitochondria
+
+MitoChondria = segmentMitochondria (Hela,Hela_cell,Hela_nuclei,[1 30 60 116 150]);
+
+imwrite(MitoChondria(:,:,1),'Mitochondria_001.png');
+imwrite(MitoChondria(:,:,2),'Mitochondria_030.png');
+imwrite(MitoChondria(:,:,3),'Mitochondria_060.png');
+imwrite(MitoChondria(:,:,4),'Mitochondria_116.png');
+imwrite(MitoChondria(:,:,5),'Mitochondria_150.png');
+
 %% Display
 displaySlice=30;
 figure(1)
@@ -50,6 +60,10 @@ colormap gray
 figure(3)
 imagesc(Hela_cell(:,:,displaySlice).*Hela(:,:,displaySlice).*(1-Hela_nuclei(:,:,displaySlice)))
 colormap gray
+
+
+
+
 %% Segment Mitochondria
 % 1 MC are darker than the surrounding, which is the same as the inside of
 % the nucleus, take that as  background value
