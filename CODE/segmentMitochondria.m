@@ -78,7 +78,15 @@ for counterSlices           = 1:numSlices
 % that will leave lines or closed regions, fill the holes and erod, that
 % will remove all the open lines
 
-    alfaP                           = 0.5;
+    alfaP                           = 0.45;
+
+    intermediateRegions             = (currentSlice<(alfaP*intensity_min1_Cell+(1-alfaP)*intensity_nuclei)).*currentRegion.*(1-imdilate(darkSolidRegions3,ones(5)));
+    intermediateRegions_L           = bwlabel(intermediateRegions);
+    intermediateRegions_P           = regionprops(intermediateRegions_L,'Area'); %#ok<*MRPBW>
+    % only larger ones
+    intermediateRegions2            = (ismember(intermediateRegions_L,find([intermediateRegions_P.Area]>100)));
+    intermediateRegions2_L          = bwlabel(imclose(intermediateRegions2,ones(3)));
+
     a1 = bwmorph(intermediateRegions2_L,'thin','inf');
     a2 = imfill(a1,'holes');
     a3 = imopen(a2,ones(3)); % 'spur','inf');
