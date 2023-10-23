@@ -67,11 +67,11 @@ cellRegion                  = (Hela_cell==1).*(Hela_nuclei==0);
 
 MitoChondria = segmentMitochondria (Hela,Hela_cell,Hela_nuclei,slicesToSegment);
 %%
-imwrite(MitoChondria(:,:,1),'Mitochondria_001B.png');
-imwrite(MitoChondria(:,:,2),'Mitochondria_030B.png');
-imwrite(MitoChondria(:,:,3),'Mitochondria_060B.png');
-imwrite(MitoChondria(:,:,4),'Mitochondria_116B.png');
-imwrite(MitoChondria(:,:,5),'Mitochondria_150B.png');
+imwrite(MitoChondria(:,:,1),'Mitochondria_001C.png');
+imwrite(MitoChondria(:,:,2),'Mitochondria_030C.png');
+imwrite(MitoChondria(:,:,3),'Mitochondria_060C.png');
+imwrite(MitoChondria(:,:,4),'Mitochondria_116C.png');
+imwrite(MitoChondria(:,:,5),'Mitochondria_150C.png');
 
 %% Display
 displaySlice=30;
