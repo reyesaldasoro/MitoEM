@@ -2,47 +2,70 @@ clear all
 close all
 
 %%
-
-baseDir8000             = 'C:\Users\sbbk034\Documents\Acad\Crick\Hela8000_tiff\';
-baseDirROIs             = 'C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\HeLa_Cell_Data';
-dirData                 = strcat(baseDirROIs,filesep,'Tiffs',filesep);
-dirROIs                 = strcat(baseDirROIs,filesep,'Matlab',filesep);
-% 30 ROIs for data, but not all were processed, so only 25 ROIs with
-% classes x2 as one has nuclei and other has cell
-dir0                    = dir(strcat(dirData,'He*'));
-dir1                    = dir(strcat(dirROIs,'He*'));
-
-numFoldersData          = size(dir0,1);
-numFoldersROIS          = size(dir1,1);
-%% Select a cell
-cellSelected            = 2;
-if cellSelected<10
-    cellSelectedStr     = strcat('0',num2str(cellSelected));
-else
-    cellSelectedStr     = num2str(cellSelected);
-end
+if strcmp(filesep,'/')
+    % Running in Mac
     
-for k=1:numFoldersROIS
-    if ~isempty(strfind(dir1(k).name,strcat('_',cellSelectedStr,'_')))
-        ROISelected     = k;
-        return;
-    end
-end
-%% Load data and ROIs
-load (strcat(dirROIs,dir1(ROISelected).name))
-load (strcat(dirROIs,dir1(ROISelected+1).name))
+    cd ('/Users/ccr22/Academic/GitHub/MitoEM/CODE')
+    load('Hela_ROI_02_30_6005_4739_81_Cell.mat')
+    load('Hela_ROI_02_30_6005_4739_81_Nuclei.mat')
+    Hela(:,:,1) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0001.tif');
+    Hela(:,:,2) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0030.tif');
+    Hela(:,:,3) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0060.tif');
+    Hela(:,:,4) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0116.tif');
+    Hela(:,:,5) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0150.tif');
+    
+    slicesToSegment         = [1 30 60 116 150];
+    Hela_background         = Hela_background(:,:,[1 30 60 116 150]);
+    Hela_cell               = Hela_cell(:,:,[1 30 60 116 150]);
+    Hela_nuclei             = Hela_nuclei(:,:,[1 30 60 116 150]);
 
-dir3 = dir(strcat(dirData,dir0(cellSelected).name,filesep,'R*'));
-numFiles            = size(dir3,1);
-Hela(2000,2000,300) = 0;
-for k=1:numFiles
-    disp(k)
-    Hela(:,:,k) = imread(strcat(dirData,dir0(cellSelected).name,filesep,dir3(k).name));
+    slicesToSegment         = [1 2 3 4 5];
+    
+else
+    % running on Windows Alienware
+    baseDir8000             = 'C:\Users\sbbk034\Documents\Acad\Crick\Hela8000_tiff\';
+    baseDirROIs             = 'C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\HeLa_Cell_Data';
+    dirData                 = strcat(baseDirROIs,filesep,'Tiffs',filesep);
+    dirROIs                 = strcat(baseDirROIs,filesep,'Matlab',filesep);
+    % 30 ROIs for data, but not all were processed, so only 25 ROIs with
+    % classes x2 as one has nuclei and other has cell
+    dir0                    = dir(strcat(dirData,'He*'));
+    dir1                    = dir(strcat(dirROIs,'He*'));
+    
+    numFoldersData          = size(dir0,1);
+    numFoldersROIS          = size(dir1,1);
+
+    %% Select a cell
+    cellSelected            = 2;
+    if cellSelected<10
+        cellSelectedStr     = strcat('0',num2str(cellSelected));
+    else
+        cellSelectedStr     = num2str(cellSelected);
+    end
+    
+    for k=1:numFoldersROIS
+        if ~isempty(strfind(dir1(k).name,strcat('_',cellSelectedStr,'_')))
+            ROISelected     = k;
+            return;
+        end
+    end
+    %% Load data and ROIs
+    load (strcat(dirROIs,dir1(ROISelected).name))
+    load (strcat(dirROIs,dir1(ROISelected+1).name))
+    
+    dir3 = dir(strcat(dirData,dir0(cellSelected).name,filesep,'R*'));
+    numFiles            = size(dir3,1);
+    Hela(2000,2000,300) = 0;
+    for k=1:numFiles
+        disp(k)
+        Hela(:,:,k) = imread(strcat(dirData,dir0(cellSelected).name,filesep,dir3(k).name));
+    end
+    slicesToSegment         = [1 30 60 116 150];
 end
 cellRegion                  = (Hela_cell==1).*(Hela_nuclei==0);
 %% Segment Mitochondria
 
-MitoChondria = segmentMitochondria (Hela,Hela_cell,Hela_nuclei,[1 30 60 116 150]);
+MitoChondria = segmentMitochondria (Hela,Hela_cell,Hela_nuclei,slicesToSegment);
 %%
 imwrite(MitoChondria(:,:,1),'Mitochondria_001B.png');
 imwrite(MitoChondria(:,:,2),'Mitochondria_030B.png');
