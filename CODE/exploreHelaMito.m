@@ -65,13 +65,27 @@ end
 cellRegion                  = (Hela_cell==1).*(Hela_nuclei==0);
 %% Segment Mitochondria
 
-MitoChondria = segmentMitochondria (Hela,Hela_cell,Hela_nuclei,slicesToSegment);
+ [MitoChondria,confidenceSegmentation] = segmentMitochondria (Hela,Hela_cell,Hela_nuclei,slicesToSegment);
 %%
-imwrite(MitoChondria(:,:,1),'Mitochondria_001C.png');
-imwrite(MitoChondria(:,:,2),'Mitochondria_030C.png');
-imwrite(MitoChondria(:,:,3),'Mitochondria_060C.png');
-imwrite(MitoChondria(:,:,4),'Mitochondria_116C.png');
-imwrite(MitoChondria(:,:,5),'Mitochondria_150C.png');
+for k=1:5
+    qq(:,:,3) = Hela(:,:,k)+uint8(((MitoChondria(:,:,k)))*50);
+    qq(:,:,2) = Hela(:,:,k);
+    qq(:,:,1) = Hela(:,:,k);
+    
+    figure(k+10)
+    imagesc(qq)
+    axis([400 1700 300 1600])
+    figure(k+20)
+    imagesc(confidenceSegmentation(:,:,k))
+    axis([400 1700 300 1600])
+    colormap jet
+end
+%%
+imwrite(MitoChondria(:,:,1),'Mitochondria_001D.png');
+imwrite(MitoChondria(:,:,2),'Mitochondria_030D.png');
+imwrite(MitoChondria(:,:,3),'Mitochondria_060D.png');
+imwrite(MitoChondria(:,:,4),'Mitochondria_116D.png');
+imwrite(MitoChondria(:,:,5),'Mitochondria_150D.png');
 
 %% Display
 displaySlice=30;
