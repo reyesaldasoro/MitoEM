@@ -1,4 +1,4 @@
-function MitoChondria = segmentMitochondria (Hela,Hela_cell,Hela_nuclei,slicesToSegment)
+function [MitoChondria,confidenceSegmentation] = segmentMitochondria (Hela,Hela_cell,Hela_nuclei,slicesToSegment)
 
 % Regular input checks
 [rows,cols,levs]                = size(Hela);
@@ -49,24 +49,24 @@ for counterSlices           = 1:numSlices
     % regions that can be selected in between the intensity of nucleus and
     % darker parts of the cell region too low can merge separate MC, too
     % high and can break them go in stages to build them 
-    alfaP                           = 0.65;
-    intermediateRegions             = (currentSlice<(alfaP*intensity_min1_Cell+(1-alfaP)*intensity_nuclei)).*currentRegion.*(1-imdilate(darkSolidRegions3,ones(5)));
-    intermediateRegions_L           = bwlabel(intermediateRegions);
-    intermediateRegions_P           = regionprops(intermediateRegions_L,'Area'); %#ok<*MRPBW>
-    % only larger ones
-    intermediateRegions2            = (ismember(intermediateRegions_L,find([intermediateRegions_P.Area]>100)));
-    intermediateRegions2_L          = bwlabel(imclose(intermediateRegions2,ones(3)));
-    intermediateRegions2_P          = regionprops(intermediateRegions2_L,'Area','EulerNumber','FilledArea','FilledImage','ConvexArea','ConvexImage','Solidity','Eccentricity','MajorAxisLength','MinorAxisLength');
-    %imagesc(currentSlice.*(intermediateRegions2_L==0))
-    %
-    % Select regions on a number of conditions:
-    % 1 have many holes holes and are are that are fairly hollow
-    manyHoles                       = find([intermediateRegions2_P.EulerNumber]<-2);
-    intermediateRegions3a           = imfill(imclose(ismember(intermediateRegions2_L,manyHoles), strel('disk',11)),'holes');
-    % 2 are fairly compact and are hollow (not by holes necessarily
-    compactHollow                   =  setdiff(find(([intermediateRegions2_P.Area]./[intermediateRegions2_P.FilledArea])<=0.85),manyHoles);
-    %compactHollow                   =  setdiff(find([intermediateRegions2_P.Solidity]<0.5),manyHoles);
-    intermediateRegions3b           = imfill(imclose(ismember(intermediateRegions2_L,compactHollow), strel('disk',9)),'holes');
+%     alfaP                           = 0.65;
+%     intermediateRegions             = (currentSlice<(alfaP*intensity_min1_Cell+(1-alfaP)*intensity_nuclei)).*currentRegion.*(1-imdilate(darkSolidRegions3,ones(5)));
+%     intermediateRegions_L           = bwlabel(intermediateRegions);
+%     intermediateRegions_P           = regionprops(intermediateRegions_L,'Area'); %#ok<*MRPBW>
+%     % only larger ones
+%     intermediateRegions2            = (ismember(intermediateRegions_L,find([intermediateRegions_P.Area]>100)));
+%     intermediateRegions2_L          = bwlabel(imclose(intermediateRegions2,ones(3)));
+%     intermediateRegions2_P          = regionprops(intermediateRegions2_L,'Area','EulerNumber','FilledArea','FilledImage','ConvexArea','ConvexImage','Solidity','Eccentricity','MajorAxisLength','MinorAxisLength');
+%     %imagesc(currentSlice.*(intermediateRegions2_L==0))
+%     %
+%     % Select regions on a number of conditions:
+%     % 1 have many holes holes and are are that are fairly hollow
+%     manyHoles                       = find([intermediateRegions2_P.EulerNumber]<-2);
+%     intermediateRegions3a           = imfill(imclose(ismember(intermediateRegions2_L,manyHoles), strel('disk',11)),'holes');
+%     % 2 are fairly compact and are hollow (not by holes necessarily
+%     compactHollow                   =  setdiff(find(([intermediateRegions2_P.Area]./[intermediateRegions2_P.FilledArea])<=0.85),manyHoles);
+%     %compactHollow                   =  setdiff(find([intermediateRegions2_P.Solidity]<0.5),manyHoles);
+%     intermediateRegions3b           = imfill(imclose(ismember(intermediateRegions2_L,compactHollow), strel('disk',9)),'holes');
     %intermediateRegions3b           = imclose(ismember(intermediateRegions2_L,find([intermediateRegions2_P.EulerNumber]<-3)), strel('disk',18));
     
     %intermediateRegions3a           = (ismember(intermediateRegions2_L,find(([intermediateRegions2_P.Area]./[intermediateRegions2_P.FilledArea])<=0.9)));
@@ -78,28 +78,45 @@ for counterSlices           = 1:numSlices
 % that will leave lines or closed regions, fill the holes and erod, that
 % will remove all the open lines
 
-    alfaP                           = 0.45;
+%     alfaP                           = 0.45;
+% 
+%     intermediateRegions             = (currentSlice<(alfaP*intensity_min1_Cell+(1-alfaP)*intensity_nuclei)).*currentRegion.*(1-imdilate(darkSolidRegions3,ones(5)));
+%     intermediateRegions_L           = bwlabel(intermediateRegions);
+%     intermediateRegions_P           = regionprops(intermediateRegions_L,'Area'); %#ok<*MRPBW>
+%     % only larger ones
+%     intermediateRegions2            = (ismember(intermediateRegions_L,find([intermediateRegions_P.Area]>100)));
+%     intermediateRegions2_L          = bwlabel(imclose(intermediateRegions2,ones(3)));
+% 
+%     a1 = bwmorph(intermediateRegions2_L,'thin','inf');
+%     a2 = imfill(a1,'holes');
+%     a3 = imopen(a2,ones(3)); % 'spur','inf');
+%     a3_L = bwlabel(a3);
+%     a3_P =regionprops(a3_L,'Area');
+%     intermediateRegions3c = (ismember(a3_L,find([a3_P.Area]>500)));
 
-    intermediateRegions             = (currentSlice<(alfaP*intensity_min1_Cell+(1-alfaP)*intensity_nuclei)).*currentRegion.*(1-imdilate(darkSolidRegions3,ones(5)));
-    intermediateRegions_L           = bwlabel(intermediateRegions);
-    intermediateRegions_P           = regionprops(intermediateRegions_L,'Area'); %#ok<*MRPBW>
-    % only larger ones
-    intermediateRegions2            = (ismember(intermediateRegions_L,find([intermediateRegions_P.Area]>100)));
-    intermediateRegions2_L          = bwlabel(imclose(intermediateRegions2,ones(3)));
+    for alfaP  = 0.35:0.05:0.8
 
-    a1 = bwmorph(intermediateRegions2_L,'thin','inf');
-    a2 = imfill(a1,'holes');
-    a3 = imopen(a2,ones(3)); % 'spur','inf');
-    a3_L = bwlabel(a3);
-    a3_P =regionprops(a3_L,'Area');
-    intermediateRegions3c = (ismember(a3_L,find([a3_P.Area]>500)));
+        intermediateRegions             = (currentSlice<(alfaP*intensity_min1_Cell+(1-alfaP)*intensity_nuclei)).*currentRegion.*(1-imdilate(darkSolidRegions3,ones(5)));
+        intermediateRegions_L           = bwlabel(intermediateRegions);
+        intermediateRegions_P           = regionprops(intermediateRegions_L,'Area'); %#ok<*MRPBW> 
+        % only larger ones
+        intermediateRegions2            = (ismember(intermediateRegions_L,find([intermediateRegions_P.Area]>100)));
+        intermediateRegions2_L          = bwlabel(imclose(intermediateRegions2,ones(3)));
 
+        a1 = bwmorph(intermediateRegions2_L,'thin','inf');
+        a2 = imfill(a1,'holes');
+        a3 = imopen(a2,ones(3)); % 'spur','inf');
+        a3_L = bwlabel(a3);
+        a3_P =regionprops(a3_L,currentSlice,'Area','MeanIntensity','MinIntensity');
+        intermediateRegions3c           = (ismember(a3_L,find([a3_P.Area]>500)));
+        intermediateRegions3d(:,:,-3+round(20*alfaP)) = intermediateRegions3c;
+    end
+    
 
 %imagesc(a3+(intermediateRegions3c|intermediateRegions3b|intermediateRegions3a))
 
-intermediateRegions5            = (intermediateRegions3c|intermediateRegions3b|intermediateRegions3a);
-
-
+%intermediateRegions5            = ((intermediateRegions3d>2)|intermediateRegions3b|intermediateRegions3a);
+    intermediateRegions5            = sum(intermediateRegions3d,3);
 
 
 
@@ -123,6 +140,7 @@ intermediateRegions5            = (intermediateRegions3c|intermediateRegions3b|i
     
     %MitoChondria                    = (imerode(intermediateRegions4>0,ones(5))+  darkSolidRegions3)>0;
     %MitoChondria(:,:,counterSlices)  = (imerode(intermediateRegions5>0,ones(5)));
-    MitoChondria(:,:,counterSlices)  = (imerode(intermediateRegions5>0,ones(1)));
+    MitoChondria(:,:,counterSlices)  = (imerode(intermediateRegions5>1,ones(1)));
+    confidenceSegmentation(:,:,counterSlices)  = intermediateRegions5;
 
 end
