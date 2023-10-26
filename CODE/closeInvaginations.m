@@ -1,4 +1,7 @@
 
+[rows,cols,levs]        = size(Hela_nuclei);
+invaginations1(rows,cols,levs)=0;
+
 
 closeStrel      = strel('disk',55);
 openStrel       = strel('disk',2);
@@ -7,9 +10,9 @@ for k=1:300
     disp(k)
     tempNuc                     = imfill(Hela_nuclei(:,:,k),'holes');
     tempNuc2                    = imclose (tempNuc,closeStrel);
-    tempNuc3                    = imerode(tempNuc2,ones(5));
-    tempNuc3                    = imopen(-tempNuc+tempNuc2,openStrel);
-    invaginations1(:,:,k)       = ;
+    tempNuc3                    = imerode(tempNuc2,ones(9));
+    tempNuc4                    = imopen((tempNuc3>tempNuc),openStrel);
+    invaginations1(:,:,k)       = tempNuc4;
     
     %imagesc(tempNuc+2*invaginations1)
     %drawnow
