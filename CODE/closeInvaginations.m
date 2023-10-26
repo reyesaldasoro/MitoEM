@@ -1,7 +1,24 @@
 
 [rows,cols,levs]        = size(Hela_nuclei);
 invaginations1(rows,cols,levs)=0;
+%%
 
+% This is for the slices to create the surfaces 
+[rows,cols,levs]        = size(Hela_nuclei);
+numSlices               = levs;
+[x2d,y2d]               = meshgrid(1:rows,1:cols);
+z2d                     = ones(rows,cols);
+xx_3D                   = zeros(rows,cols,levs);
+yy_3D                   = zeros(rows,cols,levs);
+zz_3D                   = zeros(rows,cols,levs);
+
+for k=1:numSlices
+    disp(k)
+    zz_3D(:,:,k)        = ones(rows,cols)*k;
+    xx_3D(:,:,k)        = x2d;
+    yy_3D(:,:,k)        = y2d;    
+end
+%%
 
 closeStrel      = strel('disk',55);
 openStrel       = strel('disk',2);
@@ -24,32 +41,15 @@ end
 invaginations1_L                = bwlabeln(invaginations1);
 invaginations1_P                = regionprops3(invaginations1_L,'volume','SurfaceArea');
 
-invaginations2                  = bwlabeln(ismember(invaginations1_L,find([invaginations1_P.Area]>5000)));
+invaginations2                  = bwlabeln(ismember(invaginations1_L,find([invaginations1_P.Volume]>15000)));
 
-%%
-
-% This is for the slices to create the surfaces 
-[rows,cols,levs]        = size(Hela_nuclei);
-numSlices               = levs;
-[x2d,y2d]               = meshgrid(1:rows,1:cols);
-z2d                     = ones(rows,cols);
-xx_3D                   = zeros(rows,cols,levs);
-yy_3D                   = zeros(rows,cols,levs);
-zz_3D                   = zeros(rows,cols,levs);
-
-for k=1:numSlices
-    disp(k)
-    zz_3D(:,:,k)        = ones(rows,cols)*k;
-    xx_3D(:,:,k)        = x2d;
-    yy_3D(:,:,k)        = y2d;    
-end
 %%
 maxSlice            = levs;
 minSlice            = 1;
-fstep               = 16;
+
 %%
 
-fstep=8;
+fstep=4;
 figure
     % ***** display all the cells as surfaces in one 3D plot ****       
         surf_Nuclei          = isosurface(yy_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
@@ -83,5 +83,5 @@ hLight1 = camlight ('left');
         %h4.FaceColor        = 0.75*rand(1,3);
         
         % keep all the handles
-        handlesNuclei{currCell}=h4;
-        handlesCell  {currCell}=h5;
+     %  handlesNuclei{currCell}=h4;
+     %   handlesCell  {currCell}=h5;
