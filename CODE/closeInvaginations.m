@@ -15,6 +15,8 @@ for k=1:300
     %drawnow
 end
 
+
+
 %%
 invaginations1_L                = bwlabeln(invaginations1);
 invaginations1_P                = regionprops3(invaginations1_L,'volume','SurfaceArea');
