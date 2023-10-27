@@ -1,75 +1,39 @@
 function  [invaginations2,invaginations2_P ] =  closeInvaginations(Hela_nuclei)
 
+% regular dimensions check and initialise variables that will be iterated
 [rows,cols,levs]                = size(Hela_nuclei);
 invaginations1(rows,cols,levs)  = 0;
 DistFromOutside(rows,cols,levs) = 0;
-%%
+%% Loop per slice to find invaginations
 
 closeStrel                      = strel('disk',55);
 openStrel                       = strel('disk',2);
 for k=1:levs
     %k = 24;
     disp(k)
+    % first, close the nuclei in case there are some holes inside a slice
     tempNuc                     = imfill(Hela_nuclei(:,:,k),'holes');
+    % close with a big structural element to fill in any possible
+    % invagination
     tempNuc2                    = imclose (tempNuc,closeStrel);
+    % erode the closed nuclei, this will be used later to remove closed
+    % regions that are close to the surface of the nucleus
     tempNuc3                    = imerode(tempNuc2,ones(9));
+    % find the regions of tempNuc3 that are greater than tempNuc, those are
+    % the invaginations that are not close to the surface, and open with a
+    % small structural element to remove small noise
     tempNuc4                    = imopen((tempNuc3>tempNuc),openStrel);
+    % save per slice
     invaginations1(:,:,k)       = tempNuc4;
+    % calculate distance from outside, this will help to know how deep each
+    % invagination is
     DistFromOutside(:,:,k)      = bwdist(1-tempNuc2);
-    
-    %imagesc(tempNuc+2*invaginations1)
-    %drawnow
 end
 
-%%
-%DistFromOutside                 = bwdist(1-Hela_nuclei);
+% label to remove all the small artifacts
 invaginations1_L                = bwlabeln(invaginations1);
 invaginations1_P                = regionprops3(invaginations1_L,'volume','SurfaceArea');
-
 invaginations2                  = bwlabeln(ismember(invaginations1_L,find([invaginations1_P.Volume]>15000)));
-
+% once small artifacts are removed, calculate, volume, surface, and the
+% intensities that indicate depth
 invaginations2_P                = regionprops3(invaginations2,DistFromOutside,'volume','SurfaceArea','PrincipalAxisLength','MeanIntensity','MaxIntensity');
-
-
-%%
-% maxSlice            = levs;
-% minSlice            = 1;
-
-%%
-
-% fstep=4;
-% figure
-%     % ***** display all the cells as surfaces in one 3D plot ****       
-%         surf_Nuclei          = isosurface(yy_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
-%                                           xx_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice) ,...
-%                                           zz_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
-%                                     Hela_nuclei(1:fstep:end,1:fstep:end,minSlice:maxSlice),0.7);
-%         h4                  = patch(surf_Nuclei);
-%         h4.FaceColor        = 'b';
-%         h4.EdgeColor        = 'none';
-%         h4.FaceAlpha        = 0.2;
-% 
-%                                 %
-% 
-%         surf_Invag         = isosurface(yy_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
-%                                           xx_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
-%                                           zz_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
-%                                      invaginations2(1:fstep:end,1:fstep:end,minSlice:maxSlice)>0,0.7);
-% 
-%         % Finally, let's display the surface, allocate random colours
-%         h5                  = patch(surf_Invag);
-%         h5.FaceColor        = 'r';
-%         h5.EdgeColor        = 'none';
-%         h5.FaceAlpha        = 0.7;
-% 
-% 
-%  view(74,47)
-%  lighting('phong');
-% hLight1 = camlight ('left');
- %%
- %h4.FaceColor        = 'red';
-        %h4.FaceColor        = 0.75*rand(1,3);
-        
-        % keep all the handles
-     %  handlesNuclei{currCell}=h4;
-     %   handlesCell  {currCell}=h5;
