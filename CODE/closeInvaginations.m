@@ -39,7 +39,11 @@ invaginations1_P                = regionprops3(invaginations1_L,'volume','Surfac
 invaginations2_P                = regionprops3(invaginations2,DistFromOutside,'volume','SurfaceArea','PrincipalAxisLength','MeanIntensity','MaxIntensity','Centroid');
 
 % Calculate the angle where the invagiations' centroid is located
+try
 centroidNuc                     = regionprops3(Hela_nuclei,'Centroid');
 relCentroidsInvag               = repmat(centroidNuc.Centroid,[numInvag,1])-invaginations2_P.Centroid;
 invaginations2_P.Angles         = 180*angle(relCentroidsInvag(:,1)+1i*relCentroidsInvag(:,2))/pi;
 invaginations2_P.distCentroids  = abs(relCentroidsInvag(:,1)+1i*relCentroidsInvag(:,2)) ;
+catch
+        qqq=1;
+end
