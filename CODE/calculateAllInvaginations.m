@@ -15,8 +15,9 @@ dir1                    = dir(strcat(dirROIs,'He*Nuc*'));
 numFoldersROIS          = size(dir1,1);
 
 %% Select a cell
-for cellSelected            = 1:numFoldersROIS
+for cellSelected            = 9:numFoldersROIS
     disp(cellSelected)
+    clear invag*
     load (strcat(dirROIs,dir1(cellSelected).name))
     [invaginations,invaginations_P ] =  closeInvaginations(Hela_nuclei);
 
