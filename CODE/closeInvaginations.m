@@ -10,7 +10,7 @@ closeStrel                      = strel('disk',55);
 openStrel                       = strel('disk',2);
 for k=1:levs
     %k = 24;
-    disp(k)
+    %disp(k)
     % first, close the nuclei in case there are some holes inside a slice
     tempNuc                     = imfill(Hela_nuclei(:,:,k),'holes');
     % close with a big structural element to fill in any possible
