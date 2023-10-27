@@ -33,7 +33,13 @@ end
 % label to remove all the small artifacts
 invaginations1_L                = bwlabeln(invaginations1);
 invaginations1_P                = regionprops3(invaginations1_L,'volume','SurfaceArea');
-invaginations2                  = bwlabeln(ismember(invaginations1_L,find([invaginations1_P.Volume]>15000)));
+[invaginations2,numInvag]       = bwlabeln(ismember(invaginations1_L,find([invaginations1_P.Volume]>15000)));
 % once small artifacts are removed, calculate, volume, surface, and the
 % intensities that indicate depth
-invaginations2_P                = regionprops3(invaginations2,DistFromOutside,'volume','SurfaceArea','PrincipalAxisLength','MeanIntensity','MaxIntensity');
+invaginations2_P                = regionprops3(invaginations2,DistFromOutside,'volume','SurfaceArea','PrincipalAxisLength','MeanIntensity','MaxIntensity','Centroid');
+
+% Calculate the angle where the invagiations' centroid is located
+centroidNuc                     = regionprops3(Hela_nuclei,'Centroid');
+relCentroidsInvag               = repmat(centroidNuc.Centroid,[numInvag,1])-invaginations2_P.Centroid;
+invaginations2_P.Angles         = 180*angle(relCentroidsInvag(:,1)+1i*relCentroidsInvag(:,2))/pi;
+invaginations2_P.distCentroids  = abs(relCentroidsInvag(:,1)+1i*relCentroidsInvag(:,2)) ;
