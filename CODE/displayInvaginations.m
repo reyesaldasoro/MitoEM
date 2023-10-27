@@ -1,4 +1,4 @@
-function [xx_3D,yy_3D,zz_3D] = displayInvaginations(Hela_nuclei,invaginations2,xx_3D,yy_3D,zz_3D,fstep)
+function [xx_3D,yy_3D,zz_3D] = displayInvaginations(Hela_nuclei,invaginations2,fstep,xx_3D,yy_3D,zz_3D)
 
 [rows,cols,levs]        = size(Hela_nuclei);
 
