@@ -30,6 +30,7 @@ for k=1:300
     tempNuc3                    = imerode(tempNuc2,ones(9));
     tempNuc4                    = imopen((tempNuc3>tempNuc),openStrel);
     invaginations1(:,:,k)       = tempNuc4;
+    DistFromOutside(:,:,k)      = bwdist(1-tempNuc2);
     
     %imagesc(tempNuc+2*invaginations1)
     %drawnow
@@ -38,10 +39,14 @@ end
 
 
 %%
+%DistFromOutside                 = bwdist(1-Hela_nuclei);
 invaginations1_L                = bwlabeln(invaginations1);
 invaginations1_P                = regionprops3(invaginations1_L,'volume','SurfaceArea');
 
 invaginations2                  = bwlabeln(ismember(invaginations1_L,find([invaginations1_P.Volume]>15000)));
+
+invaginations2_P                = regionprops3(invaginations2,DistFromOutside,'volume','SurfaceArea','PrincipalAxisLength','MeanIntensity','MaxIntensity');
+
 
 %%
 maxSlice            = levs;
