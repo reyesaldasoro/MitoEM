@@ -17,8 +17,6 @@ if ~exist("xx_3D",'var')
         yy_3D(:,:,k)        = y2d;
     end
 end
-%%
-
 
 %%
 maxSlice            = levs;
