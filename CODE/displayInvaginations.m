@@ -1,4 +1,4 @@
-function displayInvaginations(Hela_nuclei,invaginations2,xx_3D,yy_3D,zz_3D,fstep)
+function [xx_3D,yy_3D,zz_3D] = displayInvaginations(Hela_nuclei,invaginations2,xx_3D,yy_3D,zz_3D,fstep)
 
 [rows,cols,levs]        = size(Hela_nuclei);
 
@@ -10,7 +10,6 @@ if ~exist("xx_3D",'var')
     xx_3D                   = zeros(rows,cols,levs);
     yy_3D                   = zeros(rows,cols,levs);
     zz_3D                   = zeros(rows,cols,levs);
-
     for k=1:numSlices
         disp(k)
         zz_3D(:,:,k)        = z2d*k;
