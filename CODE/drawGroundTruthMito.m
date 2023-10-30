@@ -12,7 +12,7 @@ posFigures          = [1  6 11  17 22];
 
 
 %% Display image to be delineated and neighbours
-k1          = 1;
+k1          = 5;
 h1          = figure(1);
 clf
 h12          = gca;
@@ -79,10 +79,10 @@ groundTruthM(:,:,k)          = k*lineAsMask;
 imagesc(dataIn.*uint8(((1-imdilate(max(groundTruthM,[],3),ones(5))))))
 
 %% Use this to measure distance between GT and output
-filename = strcat('GT_',dir0(k1).name(1:end-3),'mat');
+filename = strcat('GT2_',dir0(k1).name(1:end-3),'mat');
 save (filename,'groundTruthM')
 %%
-dir1        = dir('GT_*.mat');
+dir1        = dir('GT2_*.mat');
 MitoChondria = zeros(2000,2000,5);
 for k2 = 1:5
     load(dir1(k2).name)
@@ -91,8 +91,8 @@ end
 
 %%
 
-imwrite(MitoChondria(:,:,1),'Mitochondria_001E.png');
-imwrite(MitoChondria(:,:,2),'Mitochondria_030E.png');
-imwrite(MitoChondria(:,:,3),'Mitochondria_060E.png');
-imwrite(MitoChondria(:,:,4),'Mitochondria_116E.png');
-imwrite(MitoChondria(:,:,5),'Mitochondria_150E.png');
+imwrite(MitoChondria(:,:,1),'Mitochondria_001F.png');
+imwrite(MitoChondria(:,:,2),'Mitochondria_030F.png');
+imwrite(MitoChondria(:,:,3),'Mitochondria_060F.png');
+imwrite(MitoChondria(:,:,4),'Mitochondria_116F.png');
+imwrite(MitoChondria(:,:,5),'Mitochondria_150F.png');
