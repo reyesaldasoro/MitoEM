@@ -23,7 +23,7 @@ for k=1:levs
     % the invaginations that are not close to the surface, and open with a
     % small structural element to remove small noise
     tempNuc4                    = imopen((tempNuc3>tempNuc),openStrel);
-    % save per slice
+    %save per slice
     invaginations1(:,:,k)       = tempNuc4;
     % calculate distance from outside, this will help to know how deep each
     % invagination is
@@ -40,10 +40,17 @@ invaginations2_P                = regionprops3(invaginations2,DistFromOutside,'v
 
 % Calculate the angle where the invagiations' centroid is located
 try
-centroidNuc                     = regionprops3(Hela_nuclei,'Centroid');
-relCentroidsInvag               = repmat(centroidNuc.Centroid,[numInvag,1])-invaginations2_P.Centroid;
-invaginations2_P.Angles         = 180*angle(relCentroidsInvag(:,1)+1i*relCentroidsInvag(:,2))/pi;
-invaginations2_P.distCentroids  = abs(relCentroidsInvag(:,1)+1i*relCentroidsInvag(:,2)) ;
+    %centroidNuc                     = regionprops3(Hela_nuclei,'Centroid');
+    [maxIntensityProj,numR]          = bwlabel(max(Hela_nuclei,[],3));
+    centroidNuc                     = regionprops(maxIntensityProj,'Centroid','Area');
+    if numR>1
+        % several disconnected regions, select the largest
+        [a,b]=max([centroidNuc.Area]);
+        centroidNuc = centroidNuc(b);
+    end
+    relCentroidsInvag               = repmat([centroidNuc.Centroid 150],[numInvag,1])-invaginations2_P.Centroid;
+    invaginations2_P.Angles         = 180*angle(relCentroidsInvag(:,1)+1i*relCentroidsInvag(:,2))/pi;
+    invaginations2_P.distCentroids  = abs(relCentroidsInvag(:,1)+1i*relCentroidsInvag(:,2)) ;
 catch
-        qqq=1;
+    qqq=1;
 end
