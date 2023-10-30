@@ -112,7 +112,7 @@ for counterSlices           = 1:numSlices
         intermediateRegions3d(:,:,-3+round(20*alfaP)) = intermediateRegions3c;
     end
     
-
+%imagesc(uint8(1-intermediateRegions3c).*currentSlice*0.6+uint8(intermediateRegions3c).*currentSlice)
 %imagesc(a3+(intermediateRegions3c|intermediateRegions3b|intermediateRegions3a))
 
 %intermediateRegions5            = ((intermediateRegions3d>2)|intermediateRegions3b|intermediateRegions3a);
