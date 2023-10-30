@@ -8,11 +8,11 @@ if strcmp(filesep,'/')
     cd ('/Users/ccr22/Academic/GitHub/MitoEM/CODE')
     load('Hela_ROI_02_30_6005_4739_81_Cell.mat')
     load('Hela_ROI_02_30_6005_4739_81_Nuclei.mat')
-    Hela(:,:,1) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0001.tif');
-    Hela(:,:,2) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0030.tif');
-    Hela(:,:,3) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0060.tif');
-    Hela(:,:,4) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0116.tif');
-    Hela(:,:,5) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/ROI_6005_4739_81_z0150.tif');
+    Hela(:,:,1) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/OriginalImages/ROI_6005_4739_81_z0001.tif');
+    Hela(:,:,2) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/OriginalImages/ROI_6005_4739_81_z0030.tif');
+    Hela(:,:,3) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/OriginalImages/ROI_6005_4739_81_z0060.tif');
+    Hela(:,:,4) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/OriginalImages/ROI_6005_4739_81_z0116.tif');
+    Hela(:,:,5) = imread('/Users/ccr22/Academic/GitHub/MitoEM/CODE/OriginalImages/ROI_6005_4739_81_z0150.tif');
     
     slicesToSegment         = [1 30 60 116 150];
     Hela_background         = Hela_background(:,:,[1 30 60 116 150]);
