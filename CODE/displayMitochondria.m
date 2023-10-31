@@ -48,22 +48,22 @@ figure
         h5                  = patch(surf_Invag);
         h5.FaceColor        = 'r';
         h5.EdgeColor        = 'none';
-        h5.FaceAlpha        = 0.7;
+        h5.FaceAlpha        = 0.2;
  
-        
+%%        
         surf_Mitochondria         = isosurface(yy_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
                                           xx_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
                                           zz_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
                                      Hela_mitochondria(1:fstep:end,1:fstep:end,minSlice:maxSlice)>0,0.7);
-                    
+ %%                   
         % Finally, let's display the surface, allocate random colours
         h6                  = patch(surf_Mitochondria);
         h6.FaceColor        = 'm';
         h6.EdgeColor        = 'none';
-        h6.FaceAlpha        = 0.2;
+        h6.FaceAlpha        = 0.6;
        
         
- 
+ camlight ('right');
  view(74,47)
  lighting('phong');
  camlight ('left');
