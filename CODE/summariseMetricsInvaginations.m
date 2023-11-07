@@ -33,11 +33,18 @@ end
 
 
 %%
-for k=2:5
-    for k2=7:12
-        subplot(4,6,(k-2)*6+(k2-6) )
-        currX       = a(:,k);
-        currY       = a(:,k2);
+
+figure(1)
+for k=3:6
+    for k2=7:10
+        subplot(4,4,(k-3)*4+(k2-6) )
+        
+%        for k=2:5
+%    for k2=7:12
+%        subplot(4,6,(k-2)*6+(k2-6) )
+
+        currX       = cell2mat(summary(:,k));
+        currY       = cell2mat(summary(:,k2));
         meanX       = mean(currX);
         meanY       = mean(currY);
         
@@ -54,3 +61,14 @@ for k=2:5
         pp(k,k2) = pval;
     end
 end
+
+%%
+h1=figure(2);
+
+plot(cell2mat(summary(:,4)),cell2mat(summary(:,8)),'bo','linewidth',3,'markersize',15)
+h2=gca;
+grid on
+h2.FontSize=16;
+xlabel('Total volume invaginations [voxels]','fontsize',21)
+ylabel('Total volume mitochondria [voxels]','fontsize',21)
+filename = 'correlatedFeatures_Hela_invaginations_mitochondria.png';
