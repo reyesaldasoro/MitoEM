@@ -4,8 +4,15 @@ close all
 
 %% summarise metrics Invaginations
 
-baseDir             = 'C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\HeLa_Cell_Data\Matlab';
-dir0                = dir(strcat(baseDir,filesep,'*Invag*')); 
+if strcmp(filesep,'/')
+    baseDir             = '/Users/ccr22/Desktop/Hela_Invaginations_Mitochondria/';
+else
+    baseDir             = 'C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\HeLa_Cell_Data\Matlab';
+end
+    dir0                = dir(strcat(baseDir,filesep,'*Invag*')); 
+    dir1                = dir(strcat(baseDir,filesep,'*Mito*')); 
+%%
+
 %load('C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\HeLa_Cell_Data\Matlab\Hela_ROI_01_30_876_1665_81_Invaginations.mat')
 
 clear summary;
@@ -21,6 +28,9 @@ for k = 1:size(dir0,1)
     summary{k,5} = mean(table2array(invaginations_P(:,5)));
     summary{k,6} = mean(table2array(invaginations_P(:,6)));
 end
+
+
+
 
 %%
 for k=2:5
