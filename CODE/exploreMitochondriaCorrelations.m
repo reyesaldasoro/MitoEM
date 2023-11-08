@@ -71,8 +71,20 @@ for cellSelected=1:25
     summary{cellSelected,14} = mean( ([mitochondria_P2.PrincipalAxisLength(:,3)])./([mitochondria_P2.PrincipalAxisLength(:,1)]));
 
 end
-
-
+summary{26,1} = 'Number';
+summary{26,2} = 'Name';
+summary{26,3} = 'Num Invaginations';
+summary{26,4} = 'Vol Invaginations';
+summary{26,5} = 'Mean Depth Invaginations';
+summary{26,6} = 'Max Depth Invaginations';
+summary{26,7} = 'Dist from Centroid Invaginations';
+summary{26,8} = 'Nucleus Volume';
+summary{26,9} = 'Cell Volume';
+summary{26,10} = 'Volume between Nucleus and Cell';
+summary{26,11} = ' Number Mitochondria';
+summary{26,12} = 'Volume  Mitochondria';
+summary{26,13} = 'Average Volume  Mitochondria';
+summary{26,14} = 'Aspect Ratio  Mitochondria';
 %%
 for k=3:13
     for k2=k+1:14
