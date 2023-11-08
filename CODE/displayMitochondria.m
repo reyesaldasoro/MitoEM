@@ -1,4 +1,4 @@
-function [xx_3D,yy_3D,zz_3D] = displayMitochondria(Hela_nuclei,invaginations,Hela_mitochondria,fstep,xx_3D,yy_3D,zz_3D)
+function [xx_3D,yy_3D,zz_3D] = displayMitochondria(Hela_nuclei,invaginations,Hela_mitochondria,Hela_cell,fstep,xx_3D,yy_3D,zz_3D)
 
 [rows,cols,levs]        = size(Hela_nuclei);
 
@@ -50,7 +50,12 @@ figure
         h5.EdgeColor        = 'none';
         h5.FaceAlpha        = 0.2;
  
-%%        
+%%   for the mitochondria, verify that these do not belong to other cells,
+
+        Hela_mitochondria = Hela_mitochondria.*uint16(Hela_cell);
+
+
+
         surf_Mitochondria         = isosurface(yy_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
                                           xx_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
                                           zz_3D(1:fstep:end,1:fstep:end,minSlice:maxSlice)  ,...
