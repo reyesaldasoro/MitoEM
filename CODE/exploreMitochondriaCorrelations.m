@@ -41,9 +41,10 @@ for cellSelected=1:25
     % remove mitochondria outside the cell
     mitochondria = mitochondria.*uint16(Hela_cell);
 
-    %    Invaginations
+    % Name and number
     summary{cellSelected,1} = cellSelected;
     summary{cellSelected,2} = dirN(cellSelected).name(1:end-11);
+    %    Invaginations
     summary{cellSelected,3} = size(invaginations_P,1);
     summary{cellSelected,4} = sum(table2array(invaginations_P(:,1)));
     summary{cellSelected,5} = mean(table2array(invaginations_P(:,5)));
@@ -55,13 +56,13 @@ for cellSelected=1:25
     % Cell Volume
     summary{cellSelected,9} = sum(Hela_cell(:));
     % Volume between Nucleus and Cell
-    summary{cellSelected,10} = summary{cellSelected,8}-summary{cellSelected,7};
+    summary{cellSelected,10} = summary{cellSelected,9}-summary{cellSelected,8};
     % Mitochondria
     uniqueMito              = unique(mitochondria);
     mitochondria_P          = regionprops3(mitochondria,'Volume','PrincipalAxisLength');
     mitochondria_P2         = mitochondria_P(uniqueMito(2:end),:);
     % number mitochondria
-    summary{cellSelected,11} = numel(uniqueMito0)-1;
+    summary{cellSelected,11} = numel(uniqueMito)-1;
     % total volume
     summary{cellSelected,12} = sum([mitochondria_P2.Volume]);
     % average volume
@@ -73,5 +74,58 @@ end
 
 
 %%
+for k=3:13
+    for k2=k+1:14
+        %subplot(4,4,(k-3)*4+(k2-6) )
+        
+%        for k=2:5
+%    for k2=7:12
+%        subplot(4,6,(k-2)*6+(k2-6) )
 
+        currX       = cell2mat(summary(:,k));
+        currY       = cell2mat(summary(:,k2));
+        meanX       = mean(currX);
+        meanY       = mean(currY);
+        
+        [rho,pval] = corr(currX,currY,'Type','Pearson');
+
+
+        %plot(currX,currY,'bo') %,[0.7 1.3]*meanX,[rho*0.7*meanX+meanY,'r-')
+
+%        title(strcat(num2str(k),'-',num2str(k2),'-',num2str(rho)))
+        %title(num2str(rho))
+        %grid on
+
+        rr(k,k2) = rho;
+        pp(k,k2) = pval;
+    end
+end
+
+%%
+for k=9
+    for k2=14
+        %subplot(4,4,(k-3)*4+(k2-6) )
+        
+%        for k=2:5
+%    for k2=7:12
+%        subplot(4,6,(k-2)*6+(k2-6) )
+
+        currX       = cell2mat(summary(:,k));
+        currY       = cell2mat(summary(:,k2));
+        meanX       = mean(currX);
+        meanY       = mean(currY);
+        
+        [rho,pval] = corr(currX,currY,'Type','Pearson');
+
+
+        %plot(currX,currY,'bo') %,[0.7 1.3]*meanX,[rho*0.7*meanX+meanY,'r-')
+
+%        title(strcat(num2str(k),'-',num2str(k2),'-',num2str(rho)))
+        %title(num2str(rho))
+        %grid on
+
+        rr(k,k2) = rho;
+        pp(k,k2) = pval;
+    end
+end
 
