@@ -45,13 +45,26 @@ load (strcat(dirROIs,dirN(1).name))
         yy_3D(:,:,k)        = y2d;
     end
 %% Select a cell
-cellSelected            = 1;
-% Load data and ROIs
-load (strcat(dirROIs,dirM(cellSelected).name))
-load (strcat(dirROIs,dirC(cellSelected).name))
-load (strcat(dirROIs,dirN(cellSelected).name))
-load (strcat(dirROIs,dirI(cellSelected).name))
-%%    Display
-% 
-[xx_3D,yy_3D,zz_3D,hN,hI,hM,hC] = displayMitochondria(Hela_nuclei,invaginations,mitochondria,Hela_cell,16,1,xx_3D,yy_3D,zz_3D);
+for cellSelected=1:25
+    disp(cellSelected)
+    %cellSelected            = 1;
+    % Load data and ROIs
+    load (strcat(dirROIs,dirM(cellSelected).name))
+    load (strcat(dirROIs,dirC(cellSelected).name))
+    load (strcat(dirROIs,dirN(cellSelected).name))
+    load (strcat(dirROIs,dirI(cellSelected).name))
+    %    Display
+    %
+    [xx_3D,yy_3D,zz_3D,hN,hI,hM,hC] = displayMitochondria(Hela_nuclei,invaginations,mitochondria,Hela_cell,8,1,xx_3D,yy_3D,zz_3D);
+
+end
+
+
+%%
+for cellSelected=6:25
+    disp(cellSelected)
+    savefig(figure(cellSelected+1),strcat(dirM(cellSelected).name(1:12),'display.fig'))
+end
+
+
 
