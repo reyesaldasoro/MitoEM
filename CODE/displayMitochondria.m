@@ -71,7 +71,7 @@ end
 hInvaginations                  = patch(surf_Invag);
 hInvaginations.FaceColor        = 'r';
 hInvaginations.EdgeColor        = 'none';
-hInvaginations.FaceAlpha        = 0.7;
+hInvaginations.FaceAlpha        = 1;
 
 %%
 % Finally, let's display the surface, allocate random colours
@@ -80,7 +80,7 @@ if plotType==2;
 end
 
 hMitochondria                  = patch(surf_Mitochondria);
-hMitochondria.FaceColor        = 'm';
+hMitochondria.FaceColor        = [0 1 0]*0.3;
 hMitochondria.EdgeColor        = 'none';
 hMitochondria.FaceAlpha        = 0.4;
 
@@ -90,7 +90,7 @@ if plotType==2;
 end
 
 hCell                  = patch(surf_Cell);
-hCell.FaceColor        = 'c';
+hCell.FaceColor        = [1 1 1]*0.7;
 hCell.EdgeColor        = 'none';
 hCell.FaceAlpha        = 0.1;
 
