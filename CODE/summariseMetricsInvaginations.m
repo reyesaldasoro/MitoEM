@@ -71,4 +71,4 @@ grid on
 h2.FontSize=16;
 xlabel('Total volume invaginations [voxels]','fontsize',21)
 ylabel('Total volume mitochondria [voxels]','fontsize',21)
-filename = 'correlatedFeatures_Hela_invaginations_mitochondria.png';
+filename = 'correlatedFeatures_Hela_invaginations_mitochondria2.png';
